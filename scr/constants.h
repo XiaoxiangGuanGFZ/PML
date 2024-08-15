@@ -7,4 +7,9 @@
 // Karman constant
 #define Const_Karman 0.4
 
+#define Const_lambda_v  2500 // latent heat of vaporization, [kJ/kg]
+
+#define SpecificHeat_air 1.005  //specific heat of air, 1.005 kJ/(kg°C)
+
+
 #endif // CONSTANTS
