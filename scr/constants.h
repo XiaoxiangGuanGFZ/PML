@@ -11,5 +11,6 @@
 
 #define SpecificHeat_air 1.005  //specific heat of air, 1.005 kJ/(kg°C)
 
+#define LAIref 5.0  // reference value of LAI, m2/m2
 
 #endif // CONSTANTS

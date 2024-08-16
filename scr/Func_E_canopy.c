@@ -28,11 +28,16 @@
  * double Gc            - 冠层导度 m s-1 
  * double Pa            - kPa 大气压
  * double Da            - 水汽压差, kPa
+ * double lambda        - 蒸发潜热 KJ kg-1, related to air temperature
+ * double ee            - 
+ * 
 */
 
 
-
-double Evapo_canopy(
+void Evaporation_canopy(
+    double *Ec,
+    double *lambda,
+    double *ee,
     double Ta,
     double Ac,
     double Ga,
@@ -44,28 +49,26 @@ double Evapo_canopy(
 {
     double LE;
     double Ec;
-
+    // double lambda;
+    *lambda = Ta * (-2.2) + 2500; // 蒸发潜热 KJ kg-1
+    double gamma;
+    gamma = SpecificHeat_air * Pa / (0.622 * *lambda); // 干湿表常数 kPa ℃-1
+    double s;
+    // 是饱和水汽压和温度关系曲线的斜率 kPa ℃-1
+    s = 4098 * Vapor_pressure(Ta) / pow(273.15 + Ta, 2);
+    
+    *ee = s / gamma;
     if (LAI <= 0)
     {
         LE = 0.0;
-        Ec = 0.0;
+        *Ec = 0.0;
     } else {
         double density_air;
         density_air = 3846 * Pa / (273.15 + Ta);
-        double lambda;
-        lambda = Ta * (-2.2) + 2500; // 蒸发 潜热 KJ kg-1
-        double gamma;
-        gamma = SpecificHeat_air * Pa / (0.622 * lambda); // 干湿表常数 kPa ℃-1
-        double s;
-        // 是饱和水汽压和温度关系曲线的斜率 kPa ℃-1
-        s = 4098 * Vapor_pressure(Ta) / pow(273.15 + Ta, 2);
-        double ee;
-        ee = s / gamma;
-        LE = (ee * Ac + density_air * SpecificHeat_air / gamma * Da * Ga) / (ee + 1 + Ga / Gc);
-        Ec = LE / lambda;
+        LE = (*ee * Ac + density_air * SpecificHeat_air / gamma * Da * Ga) / (*ee + 1 + Ga / Gc);
+        *Ec = LE / *lambda;
     }
     
-    return Ec;
 }
 
 double Vapor_pressure(
