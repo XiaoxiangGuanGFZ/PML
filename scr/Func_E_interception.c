@@ -45,7 +45,6 @@ double Evaporation_Interception(
     double fV, f_ER, S_V, P_wet;
     fV = 1 - exp(- LAI/ LAIref);
     f_ER = fV * f_ER0;
-    double fV, f_ER, S_V;
     S_V = S_sls * LAI;
     P_wet = -log(1 - f_ER / fV) * S_V / f_ER;
 

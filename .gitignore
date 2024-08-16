@@ -1,0 +1,80 @@
+# Compiled object files
+*.o
+*.obj
+*.lo
+*.lai
+
+# Executable files
+*.exe
+*.out
+*.app
+*.a
+*.so
+*.dll
+*.dylib
+
+# Debug files
+*.dSYM/
+*.stackdump
+*.log
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Static and Shared libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Generated files
+*.d
+*.dep
+
+# Ctags
+tags
+
+# Backup files
+*~
+# *# for some editors like Emacs
+*#
+.#*
+
+# IDE specific
+# CLion
+.idea/
+cmake-build-debug/
+cmake-build-release/
+CMakeLists.txt.user
+# VSCode
+.vscode/
+# Eclipse
+.cproject
+.project
+.settings/
+# Code::Blocks
+*.layout
+*.depend
+*.depend.*
+*.cbp
+*.layout
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Auto-generated documentation
+docs/
+
+# Other unwanted files
+*.bak
+*.swp
+*.swo
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

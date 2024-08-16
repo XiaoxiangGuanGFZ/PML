@@ -48,8 +48,6 @@ void Evaporation_canopy(
 )
 {
     double LE;
-    double Ec;
-    // double lambda;
     *lambda = Ta * (-2.2) + 2500; // 蒸发潜热 KJ kg-1
     double gamma;
     gamma = SpecificHeat_air * Pa / (0.622 * *lambda); // 干湿表常数 kPa ℃-1
