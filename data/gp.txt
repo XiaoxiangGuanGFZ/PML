@@ -1,0 +1,12 @@
+FP_DATA,./data/data.csv
+FP_OUT,./data/out.csv
+
+# number of calculation steps
+CALC_N,300
+
+# the version of PML model: 1 or 2
+PML_V,1
+
+# Zm, the measurement height of humidity and wind speed
+Zm,15
+

@@ -19,6 +19,15 @@
 #include "constants.h"
 #include "Func_E_soil.h"
 
+double Evaporation_soil_equilibrium(
+    double ee,
+    double As
+)
+{
+    double Es_eq;
+    Es_eq = ee * As / (ee + 1);
+    return Es_eq;
+}
 
 double Evaporation_soil(
     double Es_eq,
@@ -36,7 +45,7 @@ double SoilMoisture_factor(
     double *Ei,
     double *Es_eq,
     int N,
-    int calc_ite
+    size_t calc_ite
 )
 {
     double f;

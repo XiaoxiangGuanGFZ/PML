@@ -29,7 +29,7 @@
  * double As            - 土壤有效辐射
  * double tau           - 土壤有效辐射吸收比
  * double LAI           - 叶面积指数 m2 m-2
- * double kA            - 地表可供能量消光系数
+ * double k_A           - 地表可供能量消光系数
 */
 
 
@@ -39,6 +39,24 @@
 #include <math.h>
 #include "constants.h"
 #include "Func_radiation.h"
+
+void Radiation(
+    double alpha,
+    double Rs_in,
+    double Rl_in,
+    double Emiss,
+    double Ta,
+    double *Ac,
+    double *As,
+    double k_A,
+    double LAI
+)
+{
+    double Rl_out, Rn;
+    Rl_out = Radiation_long_out(Emiss, Ta);
+    Rn = Net_radiation(alpha, Rs_in, Rl_in, Rl_out);
+    Radiation_effect(LAI, Ac, As, Rn, k_A);
+}
 
 double Net_radiation(
     double alpha,
@@ -67,11 +85,11 @@ void Radiation_effect(
     double *Ac,
     double *As,
     double Rn,
-    double kA
+    double k_A
 )
 {
     double tau;
-    tau = exp(- kA * LAI);
+    tau = exp(- k_A * LAI);
     *As =Rn * tau;
     *Ac = Rn - *As;
 }
