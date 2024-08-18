@@ -1,8 +1,9 @@
-FP_DATA,./data/data.csv
-FP_OUT,./data/out.csv
+FP_DATA,../../data/data_AU-Whr.csv
+FP_PARA,../../data/PMLpara_AU-Whr.csv
+FP_OUT,../../data/fluxsim_AU-Whr.csv
 
 # number of calculation steps
-CALC_N,300
+CALC_N,1461
 
 # the version of PML model: 1 or 2
 PML_V,1
