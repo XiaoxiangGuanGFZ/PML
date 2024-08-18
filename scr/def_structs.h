@@ -2,6 +2,15 @@
 #define STRUCTS_DEF
 
 #define MAXCHAR 400
+
+typedef struct 
+{
+    int y;
+    int m;
+    int d;
+} ST_DATE;
+
+
 typedef struct 
 {
     double Ta;
@@ -51,6 +60,7 @@ typedef struct
     /* data */
     char FP_DATA[MAXCHAR];
     char FP_OUT[MAXCHAR];
+    char FP_PARA[MAXCHAR];
     int CALC_N;
     int PML_V;
     double Zm;

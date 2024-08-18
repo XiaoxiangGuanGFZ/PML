@@ -73,6 +73,10 @@ void import_global(
                 {
                     strcpy(p_gp->FP_OUT, token2);
                 }
+                else if (strncmp(token, "FP_PARA", 7) == 0)
+                {
+                    strcpy(p_gp->FP_PARA, token2);
+                }
                 else if (strncmp(token, "PML_V", 5) == 0)
                 {
                     p_gp->PML_V = atoi(token2);
@@ -87,7 +91,7 @@ void import_global(
                 }
                 else
                 {
-                    printf("Error in opening global parameter file: unrecognized parameter field: %s!", token);
+                    printf("Error in opening global parameter file: unrecognized parameter field: %s\n", token);
                     exit(1);
                 }
             }
@@ -122,18 +126,18 @@ void print_global(
 )
 {
     printf("----------- PML setup -----------\n");
-    printf("%-7s:%s\n%-7s:%s\n%-7s:%d\n%-7s:%d\n%-7s:%.2f\n",
+    printf("%-7s:%s\n%-7s:%s\n%-7s:%s\n%-7s:%d\n%-7s:%d\n%-7s:%.2f\n",
            "FP_DATA", p_gp->FP_DATA,
+           "FP_PARA", p_gp->FP_PARA,
            "FP_OUT", p_gp->FP_OUT,
            "CALC_N", p_gp->CALC_N,
            "PML_V", p_gp->PML_V,
            "Zm", p_gp->Zm);
 }
 
-
-
 void Write_ET2csv(
-    char FP_OUT,
+    char *FP_OUT,
+    ST_DATE *ts_date,
     ST_VAR_ET *p_Outs,
     int CALC_N)
 {
@@ -145,11 +149,107 @@ void Write_ET2csv(
     }
     for (size_t i = 0; i < CALC_N; i++)
     {
-        fprintf(pf_out, "%.2f,%.2f,%.2f,%.2f\n",
-               (p_Outs + i)->Ec,
-               (p_Outs + i)->Ei,
-               (p_Outs + i)->Es,
-               (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es);
+        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f\n",
+                (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
+                (p_Outs + i)->Ec,
+                (p_Outs + i)->Ei,
+                (p_Outs + i)->Es,
+                (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es);
     }
+}
+
+
+
+void import_data(
+    char FP_DATA[],
+    int CALC_N,
+    ST_DATE **ts_date,
+    ST_VAR_IN **p_Vars)
+{
+    FILE *fp;
+    if ((fp = fopen(FP_DATA, "r")) == NULL)
+    {
+        printf("Cannot open data file: %s\n", FP_DATA);
+        exit(1);
+    }
+    *ts_date = malloc(sizeof(ST_DATE) * CALC_N);
+    *p_Vars = malloc(sizeof(ST_VAR_IN) * CALC_N);
+    // struct df_rr_d df_rr_daily[10000];
+    char *token;
+    char row[MAXCHAR];
+    int i;
+    i = 0; // record the number of rows in the data file
+    fgets(row, MAXCHAR, fp); // skip the first row
+    // printf("first row: %s", row);
+    while (fgets(row, MAXCHAR, fp) != NULL && i < CALC_N)
+    {
+        (*ts_date + i)->y = atoi(strtok(row, ",")); // df_rr_daily[i].
+        (*ts_date + i)->m = atoi(strtok(NULL, ","));
+        (*ts_date + i)->d = atoi(strtok(NULL, ","));
+        (*p_Vars + i)->Ta = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Rs_in = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Rl_in = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Da = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Pa = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Prec = atof(strtok(NULL, ","));
+        (*p_Vars + i)->u2 = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Albedo = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Emiss = atof(strtok(NULL, ","));
+        (*p_Vars + i)->LAI = atof(strtok(NULL, ","));
+        
+        i++;
+    }
+    fclose(fp);
+    if (i != CALC_N)
+    {
+        printf("conflict numbers of lines in data file: %s\n", FP_DATA);
+        exit(1);
+    }
+    
+}
+
+
+void import_PMLpara(
+    char FP_PARA[],
+    int CALC_N,
+    ST_PARA **p_Paras)
+{
+    FILE *fp;
+    if ((fp = fopen(FP_PARA, "r")) == NULL)
+    {
+        printf("Cannot open data file: %s\n", FP_PARA);
+        exit(1);
+    }
+    *p_Paras = malloc(sizeof(ST_PARA) * CALC_N);
+    // struct df_rr_d df_rr_daily[10000];
+    char *token;
+    char row[MAXCHAR];
+    int i;
+    i = 0; // record the number of rows in the data file
+    fgets(row, MAXCHAR, fp); // skip the first row
+    // printf("first row: %s", row);
+    while (fgets(row, MAXCHAR, fp) != NULL && i < CALC_N)
+    {
+        (*p_Paras + i)->g_sx = atof(strtok(row, ","));
+        (*p_Paras + i)->D0 = atof(strtok(NULL, ","));
+        (*p_Paras + i)->D50 = atof(strtok(NULL, ","));
+        (*p_Paras + i)->k_Q = atof(strtok(NULL, ","));
+        (*p_Paras + i)->k_A = atof(strtok(NULL, ","));
+        (*p_Paras + i)->S_sls = atof(strtok(NULL, ","));
+        (*p_Paras + i)->f_ER0 = atof(strtok(NULL, ","));
+        (*p_Paras + i)->beta = atof(strtok(NULL, ","));
+        (*p_Paras + i)->eta = atof(strtok(NULL, ","));
+        (*p_Paras + i)->m = atof(strtok(NULL, ","));
+        (*p_Paras + i)->Am_25 = atof(strtok(NULL, ","));
+        
+        i++;
+    }
+    fclose(fp);
+    if (i != CALC_N)
+    {
+        printf("conflict numbers of lines in Para file: %s\n", FP_PARA);
+        exit(1);
+    }
+    
 }
 
