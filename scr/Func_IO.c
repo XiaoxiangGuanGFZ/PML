@@ -283,7 +283,7 @@ void import_PMLpara(
     }
     printf("***** para preview: the first 6 rows\n");
     printf("%s", row_first);
-    for (size_t i = 0; i < 5; i++)
+    for (size_t i = 0; i < 6; i++)
     {
         printf("%.4f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
                (*p_Paras + i)->g_sx, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
