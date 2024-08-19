@@ -19,24 +19,44 @@
 #include "constants.h"
 #include "Func_E_soil.h"
 
+/*********************************************************
+ * VARIABLEs:
+ * double Ta            - air temperature,  celsuis degree     
+ * double As            - Available energy on soil, 有效辐射（ W m-2
+ * double Es_eq         - equilibrium soil evaporation, mm/d
+ * double Ei            - canopy interception evaporation, mm/d
+ * double Prec          - precipitation, mm/d
+ * double Es            - soil evaporation, mm/d
+ * double lambda        - 蒸发潜热 KJ kg-1, related to air temperature
+ * double ee            - 
+ * 
+*/
+
+
+
 double Evaporation_soil_equilibrium(
     double ee,
+    double lambda,
     double As
 )
 {
     double Es_eq;
-    Es_eq = ee * As / (ee + 1);
+    Es_eq = ee * As / (ee + 1) / lambda * 86.4;
+    if (Es_eq < 0.0001)
+    {
+        Es_eq = 0.0001;
+    }
+    
     return Es_eq;
 }
 
 double Evaporation_soil(
     double Es_eq,
-    double f,
-    double lambda
+    double f
 )
 {
     double Es;
-    Es = f * Es_eq / lambda;
+    Es = f * Es_eq;
     return Es;
 }
 

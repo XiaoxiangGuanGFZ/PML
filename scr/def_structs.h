@@ -13,26 +13,26 @@ typedef struct
 
 typedef struct 
 {
-    double Ta;
-    double Pa;
-    double Prec;
-    double Da;
-    double Rs_in;
-    double Rl_in;
-    double u2;
-    double LAI;
-    double Hc;
-    double Ca;
-    double Emiss;
-    double Albedo;
+    double Ta;          // deg C, air temperature
+    double Pa;          // air pressure, kPa
+    double Prec;        // precipitation, mm
+    double Da;          // vapor pressure deficit, hPa
+    double Rs_in;       // shortwave solar radiation, w/m2
+    double Rl_in;       // longwave radiation, w/m2
+    double u2;          // wind speed, m/s
+    double LAI;         // leaf area index, m2/m2
+    double Hc;          // canopy height, m
+    double Ca;          // C02 concentration, 𝜇mol mol-1
+    double Emiss;       // 地表发射率, emissitivity
+    double Albedo;      // 地表反照率
 } ST_VAR_IN;
 
 typedef struct 
 {
-    double Ei;
-    double Ec;
-    double Es;
-    double Es_eq;
+    double Ei;          // canopy interception evaporation, mm
+    double Ec;          // canopy transpiration, mm
+    double Es;          // soil evaporation, mm
+    double Es_eq;       // soil equilibrium evaporation, mm
 } ST_VAR_ET;
 
 

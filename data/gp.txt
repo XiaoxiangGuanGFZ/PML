@@ -9,5 +9,5 @@ CALC_N,1461
 PML_V,1
 
 # Zm, the measurement height of humidity and wind speed
-Zm,15
+Zm,30
 

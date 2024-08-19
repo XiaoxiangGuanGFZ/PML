@@ -20,7 +20,7 @@ void PML(
     ST_VAR_IN * p_Vars,
     ST_PARA * p_Paras,
     ST_VAR_ET * p_Outs,
-    int n
+    int CALC_N
 )
 {
     double Ga;
@@ -33,22 +33,23 @@ void PML(
     double Ac, As;
     double f;
 
-
     double *Prec, *Es_eq, *Ei;
-    Prec = (double *)malloc(sizeof(double) * n);
-    Es_eq = (double *)malloc(sizeof(double) * n);
-    Ei = (double *)malloc(sizeof(double) * n);
-    for (size_t i = 0; i < n; i++)
+    Prec = (double *)malloc(sizeof(double) * CALC_N);
+    Es_eq = (double *)malloc(sizeof(double) * CALC_N);
+    Ei = (double *)malloc(sizeof(double) * CALC_N);
+    for (size_t i = 0; i < CALC_N; i++)
     {
         *(Prec + i) = (p_Vars + i)->Prec;
     }
     
 
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < CALC_N; i++)
     {
-        Ga = Conductance_Air((p_Vars + i)->Hc, p_GP->Zm, (p_Vars + i)->u2);
+        Ga = Conductance_Air((p_Vars + i)->Hc, p_GP->Zm, (p_Vars + i)->u2); // unit of Ga: m/s
+        Q_h = 0.5 * (p_Vars + i)->Rs_in;  // unit: w/m2
         if (p_GP->PML_V == 1)
         {
+            // unit of Gc: m/s
             Gc = ConductCanopy_V1(
                 Q_h,
                 (p_Vars + i)->Da,
@@ -99,14 +100,14 @@ void PML(
             (p_Vars + i)->LAI,
             (p_Paras + i)->f_ER0,
             (p_Paras + i)->S_sls);
-        *(Es_eq + i) = Evaporation_soil_equilibrium(ee, As);
+        *(Es_eq + i) = Evaporation_soil_equilibrium(ee, lambda, As);
         f = SoilMoisture_factor(
             Prec,
             Ei,
             Es_eq,
-            n,
+            CALC_N,
             i);
-        Es = Evaporation_soil(*(Es_eq + i), f, lambda);
+        Es = Evaporation_soil(*(Es_eq + i), f);
 
         // ---- out
         (p_Outs + i)->Ec = Ec;

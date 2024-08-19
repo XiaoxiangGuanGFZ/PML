@@ -45,14 +45,27 @@ int main(int argc, char * argv[])
     // }
 
     /***************** PML simulation *******************/
-    
+    ST_VAR_ET * p_Outs;
+    p_Outs = (ST_VAR_ET *)malloc(sizeof(ST_VAR_ET) * p_gp->CALC_N);
 
+    PML(
+        p_gp,
+        p_Vars,
+        p_Paras,
+        p_Outs,
+        p_gp->CALC_N);
+    Write_ET2csv(
+        p_gp->FP_OUT,
+        ts_date,
+        p_Outs,
+        p_gp->CALC_N);
 
     /****************** end of the program ***************/
     free(ts_date);
     free(p_Paras);
     free(p_gp);
     free(p_Paras);
+    free(p_Outs);
     return 0;
 }
 

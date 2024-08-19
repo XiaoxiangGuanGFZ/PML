@@ -172,8 +172,8 @@ void import_data(
         printf("Cannot open data file: %s\n", FP_DATA);
         exit(1);
     }
-    *ts_date = malloc(sizeof(ST_DATE) * CALC_N);
-    *p_Vars = malloc(sizeof(ST_VAR_IN) * CALC_N);
+    *ts_date = (ST_DATE *)malloc(sizeof(ST_DATE) * CALC_N);
+    *p_Vars = (ST_VAR_IN *)malloc(sizeof(ST_VAR_IN) * CALC_N);
     // struct df_rr_d df_rr_daily[10000];
     char *token;
     char row[MAXCHAR];
@@ -220,7 +220,7 @@ void import_PMLpara(
         printf("Cannot open data file: %s\n", FP_PARA);
         exit(1);
     }
-    *p_Paras = malloc(sizeof(ST_PARA) * CALC_N);
+    *p_Paras = (ST_PARA *)malloc(sizeof(ST_PARA) * CALC_N);
     // struct df_rr_d df_rr_daily[10000];
     char *token;
     char row[MAXCHAR];

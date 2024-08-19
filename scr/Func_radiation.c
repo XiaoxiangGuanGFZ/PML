@@ -25,8 +25,8 @@
  * double Rl_out        - 向上长波辐射 (W m-2)
  * double Emiss         - 发射率
  * double Ta            - 气温（℃）
- * double Ac            - 冠层有效辐射
- * double As            - 土壤有效辐射
+ * double Ac            - 冠层有效辐射 (W m-2)
+ * double As            - 土壤有效辐射 (W m-2)
  * double tau           - 土壤有效辐射吸收比
  * double LAI           - 叶面积指数 m2 m-2
  * double k_A           - 地表可供能量消光系数
@@ -75,8 +75,8 @@ double Radiation_long_out(
     double Ta
 )
 {
-    double Rl_out;
-    Rl_out = Emiss * Const_SB * pow(273.15 + Ta, 4) / 0.0864;
+    double Rl_out; // w/m2
+    Rl_out = Emiss * Const_SB * pow(273.15 + Ta, 4) / 0.0864; // 0.0864 is the unit conversion coefficient
     return Rl_out;
 }
 
@@ -90,7 +90,7 @@ void Radiation_effect(
 {
     double tau;
     tau = exp(- k_A * LAI);
-    *As =Rn * tau;
+    *As = Rn * tau;
     *Ac = Rn - *As;
 }
 

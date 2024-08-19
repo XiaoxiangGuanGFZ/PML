@@ -52,19 +52,19 @@ void Evaporation_canopy(
     double gamma;
     gamma = SpecificHeat_air * Pa / (0.622 * *lambda); // 干湿表常数 kPa ℃-1
     double s;
-    // 是饱和水汽压和温度关系曲线的斜率 kPa ℃-1
+    // s 是饱和水汽压和温度关系曲线的斜率 kPa ℃-1
     s = 4098 * Vapor_pressure(Ta) / pow(273.15 + Ta, 2);
     
-    *ee = s / gamma;
+    *ee = s / gamma; // unitless
     if (LAI <= 0)
     {
         LE = 0.0;
         *Ec = 0.0;
     } else {
         double density_air;
-        density_air = 3846 * Pa / (273.15 + Ta);
-        LE = (*ee * Ac + density_air * SpecificHeat_air / gamma * Da * Ga) / (*ee + 1 + Ga / Gc);
-        *Ec = LE / *lambda;
+        density_air = 3846 * Pa / (273.15 + Ta);  // g/m3
+        LE = (*ee * Ac + density_air * SpecificHeat_air / gamma * Da * Ga) / (*ee + 1 + Ga / Gc); // unit of LE: W/m2
+        *Ec = LE / *lambda * 3.6 * 24; // 86.4 = 3.6 * 24; unit conversion coefficient; the unit of Ec: mm/d
     }
     
 }

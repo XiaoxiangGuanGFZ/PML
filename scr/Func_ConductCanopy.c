@@ -58,6 +58,10 @@ double ConductCanopy_V1(
     Gc = g_sx / k_Q * log(
         (Q_h + Q50) / (Q_h * exp(- k_A * LAI) + Q50)
     ) * (1 / (1 + Da / D50));
+    if (Gc < 1e-6)
+    {
+        Gc = 1e-6;
+    }
     return Gc;
 }
 
@@ -102,7 +106,7 @@ double ConductCanopy_V2(
     Gc = m * P1 / k_Q / (P2 + P4) * (k_Q * LAI + 
         log((P1 + P3 + P4) / (P2 + P3 * exp(k_Q * LAI) + P4)) * 1 / (1 + Da/D0)
     );
-    if (Gc > 1e-6)
+    if (Gc < 1e-6)
     {
         Gc = 1e-6;
     }

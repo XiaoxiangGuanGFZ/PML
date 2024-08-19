@@ -3,13 +3,13 @@
 
 double Evaporation_soil_equilibrium(
     double ee,
+    double lambda,
     double As
 );
 
 double Evaporation_soil(
     double Es_eq,
-    double f,
-    double lambda
+    double f    
 );
 
 double SoilMoisture_factor(
