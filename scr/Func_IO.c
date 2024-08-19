@@ -138,6 +138,7 @@ void print_global(
 void Write_ET2csv(
     char *FP_OUT,
     ST_DATE *ts_date,
+    ST_VAR_IN * p_Vars,
     ST_VAR_ET *p_Outs,
     int CALC_N)
 {
@@ -147,15 +148,34 @@ void Write_ET2csv(
         printf("Failed to create / open output file: %s\n", FP_OUT);
         exit(1);
     }
+    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s\n",
+            "y", "m", "d", "Ec", "Ei", "Es", "ET", "Rn");
     for (size_t i = 0; i < CALC_N; i++)
     {
-        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f\n",
+        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f\n",
                 (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                 (p_Outs + i)->Ec,
                 (p_Outs + i)->Ei,
                 (p_Outs + i)->Es,
-                (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es);
+                (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
+                (p_Vars + i)->Rn);
     }
+
+    fclose(pf_out);
+    printf("***** output preview: the first 6 rows\n");
+    printf("%4s %3s %3s %5s %5s %5s %5s %7s\n",
+           "y", "m", "d", "Ec", "Ei", "Es", "ET", "Rn");
+    for (size_t i = 0; i < 6; i++)
+    {
+        printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %7.2f\n",
+               (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
+               (p_Outs + i)->Ec,
+               (p_Outs + i)->Ei,
+               (p_Outs + i)->Es,
+               (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
+               (p_Vars + i)->Rn);
+    }
+    printf("...\n");
 }
 
 
@@ -174,13 +194,14 @@ void import_data(
     }
     *ts_date = (ST_DATE *)malloc(sizeof(ST_DATE) * CALC_N);
     *p_Vars = (ST_VAR_IN *)malloc(sizeof(ST_VAR_IN) * CALC_N);
-    // struct df_rr_d df_rr_daily[10000];
+    
     char *token;
     char row[MAXCHAR];
+    char row_first[MAXCHAR];
     int i;
     i = 0; // record the number of rows in the data file
-    fgets(row, MAXCHAR, fp); // skip the first row
-    // printf("first row: %s", row);
+    fgets(row_first, MAXCHAR, fp); // skip the first row
+    
     while (fgets(row, MAXCHAR, fp) != NULL && i < CALC_N)
     {
         (*ts_date + i)->y = atoi(strtok(row, ",")); // df_rr_daily[i].
@@ -205,7 +226,16 @@ void import_data(
         printf("conflict numbers of lines in data file: %s\n", FP_DATA);
         exit(1);
     }
-    
+    printf("***** data preview: the first 6 rows\n");
+    printf("%s", row_first);
+    for (size_t i = 0; i < 6; i++)
+    {
+        printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+               (*ts_date + i)->y, (*ts_date + i)->m, (*ts_date + i)->d,
+               (*p_Vars + i)->Ta, (*p_Vars + i)->Rs_in, (*p_Vars + i)->Rl_in, (*p_Vars + i)->Da, (*p_Vars + i)->Pa,
+               (*p_Vars + i)->Prec, (*p_Vars + i)->u2, (*p_Vars + i)->Albedo, (*p_Vars + i)->Emiss, (*p_Vars + i)->LAI);
+    }
+    printf("...\n");
 }
 
 
@@ -224,10 +254,11 @@ void import_PMLpara(
     // struct df_rr_d df_rr_daily[10000];
     char *token;
     char row[MAXCHAR];
+    char row_first[MAXCHAR];
     int i;
     i = 0; // record the number of rows in the data file
-    fgets(row, MAXCHAR, fp); // skip the first row
-    // printf("first row: %s", row);
+    fgets(row_first, MAXCHAR, fp); // skip the first row
+    
     while (fgets(row, MAXCHAR, fp) != NULL && i < CALC_N)
     {
         (*p_Paras + i)->g_sx = atof(strtok(row, ","));
@@ -250,6 +281,15 @@ void import_PMLpara(
         printf("conflict numbers of lines in Para file: %s\n", FP_PARA);
         exit(1);
     }
-    
+    printf("***** para preview: the first 6 rows\n");
+    printf("%s", row_first);
+    for (size_t i = 0; i < 5; i++)
+    {
+        printf("%.4f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+               (*p_Paras + i)->g_sx, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
+               (*p_Paras + i)->S_sls, (*p_Paras + i)->f_ER0, (*p_Paras + i)->beta, (*p_Paras + i)->eta, (*p_Paras + i)->m,
+               (*p_Paras + i)->Am_25);
+    }
+    printf("...\n");
 }
 

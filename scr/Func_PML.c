@@ -79,6 +79,7 @@ void PML(
             (p_Vars + i)->Rl_in,
             (p_Vars + i)->Emiss,
             (p_Vars + i)->Ta,
+            &((p_Vars + i)->Rn),
             &Ac,
             &As,
             (p_Paras + i)->k_A,

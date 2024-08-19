@@ -8,6 +8,7 @@ void Radiation(
     double Rl_in,
     double Emiss,
     double Ta,
+    double *Rn,
     double *Ac,
     double *As,
     double k_A,

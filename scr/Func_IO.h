@@ -14,6 +14,7 @@ void print_global(
 void Write_ET2csv(
     char *FP_OUT,
     ST_DATE *ts_date,
+    ST_VAR_IN * p_Vars,
     ST_VAR_ET *p_Outs,
     int CALC_N);
 

@@ -25,6 +25,7 @@ typedef struct
     double Ca;          // C02 concentration, 𝜇mol mol-1
     double Emiss;       // 地表发射率, emissitivity
     double Albedo;      // 地表反照率
+    double Rn;          // net radiation, w/m2; estimated from program
 } ST_VAR_IN;
 
 typedef struct 

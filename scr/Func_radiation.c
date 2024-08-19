@@ -46,16 +46,17 @@ void Radiation(
     double Rl_in,
     double Emiss,
     double Ta,
+    double *Rn,
     double *Ac,
     double *As,
     double k_A,
     double LAI
 )
 {
-    double Rl_out, Rn;
+    double Rl_out;
     Rl_out = Radiation_long_out(Emiss, Ta);
-    Rn = Net_radiation(alpha, Rs_in, Rl_in, Rl_out);
-    Radiation_effect(LAI, Ac, As, Rn, k_A);
+    *Rn = Net_radiation(alpha, Rs_in, Rl_in, Rl_out);
+    Radiation_effect(LAI, Ac, As, *Rn, k_A);
 }
 
 double Net_radiation(
