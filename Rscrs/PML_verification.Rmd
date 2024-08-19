@@ -16,6 +16,7 @@ verify the PML model in evapotranspiration simulation at specific flux tower sit
 ```{r lib_ws, warning=FALSE, message=FALSE}
 library(tidyverse)
 ws <- "D:/Xie/PML/"
+source(paste0(ws, "Rscrs/metrics.R"))
 ```
 
 ## Read the data
@@ -95,6 +96,15 @@ df_com %>% mutate(x = seq(1, dim(df_com)[1])) %>%
   geom_point(aes(x = x, y = ET_obs)) +
   geom_line(aes(x = x, y = ET_sim), color = "blue") + 
   labs(x = "time", y = "ET [mm/d]")
+
+NSE = Func_NSE(df_com$ET_sim, df_com$ET_obs)
+RMSE = Func_RMSE(df_com$ET_sim, df_com$ET_obs)
+R2 = Func_R2(df_com$ET_sim, df_com$ET_obs)
+Re = Func_Re(df_com$ET_sim, df_com$ET_obs)
+data.frame(
+  metric = c("NSE", "R2", "RMSE", "Re(%)"),
+  value = c(NSE, R2, RMSE, Re)
+)
 
 ```
 
