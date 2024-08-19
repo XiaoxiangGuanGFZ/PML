@@ -1,0 +1,102 @@
+---
+title: "PML_verification"
+author: "Xiaoxiang Guan"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+verify the PML model in evapotranspiration simulation at specific flux tower site.
+
+```{r lib_ws, warning=FALSE, message=FALSE}
+library(tidyverse)
+ws <- "D:/Xie/PML/"
+```
+
+## Read the data
+
+The input weather variables, the PML parameters, PML simulated outputs like `ET_sim` and `Rn``
+
+```{r data_obs_sim}
+df_data <- read.table(
+  paste0(ws, "data/data_AU-Whr.csv"), header = T, sep = ","
+)
+df_para <- read.table(
+  paste0(ws, "data/PMLpara_AU-Whr.csv"), header = T, sep = ","
+)
+df_obs <- read.table(
+  paste0(ws, "data/fluxobs_AU-Whr.csv"), header = T, sep = ","
+)
+df_sim <- read.table(
+  paste0(ws, "data/fluxsim_AU-Whr.csv"), header = T, sep = ","
+)
+
+df_com <- cbind(
+  df_obs,
+  Rs_in = df_data$Rs_in,
+  Prec = df_data$Prec,
+  Da = df_data$Da,
+  Ta = df_data$Ta,
+  ET_sim = df_sim$ET,
+  Rn = df_sim$Rn
+) %>% mutate(
+  lambda = Ta * (-2.2) + 2500
+)
+
+```
+
+
+
+## Energy closure
+
+data quality control / filtering and energy closure check
+
+```{r data_quality_control}
+
+df_com <- df_com %>% filter(
+  LE_code > 0.75,
+  Prec <= 0,
+  LE > 0,
+  Da > 0,
+  H > 5,
+  Rs_in > 50,
+  Rn > 0,
+  abs(LE + H - Rn) < 25
+) %>% mutate(
+  EBR = (LE + H) / Rn
+) %>% mutate(
+  LE_corrected = LE / EBR
+) %>% mutate(
+  ET_obs = round(LE_corrected / lambda * 86.4, 2)
+)
+
+head(df_com)
+dim(df_com)
+
+```
+
+## some plots
+compare simulated and observed ET at this flux tower site
+
+```{r sim_vs_obs_metrics}
+
+ggplot(data = df_com) +
+  geom_point(aes(x = ET_obs, ET_sim)) +
+  geom_abline(slope = 1, intercept = 0) + 
+  labs(x = "Observed ET [mm/d]", y = "Simulated ET [mm/d]")
+
+df_com %>% mutate(x = seq(1, dim(df_com)[1])) %>% 
+  ggplot() +
+  geom_point(aes(x = x, y = ET_obs)) +
+  geom_line(aes(x = x, y = ET_sim), color = "blue") + 
+  labs(x = "time", y = "ET [mm/d]")
+
+```
+
+
+
