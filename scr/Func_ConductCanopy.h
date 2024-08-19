@@ -16,6 +16,7 @@ double ConductCanopy_V1(
 double ConductCanopy_V2(
     double Ta,
     double Da,
+    double Pa,
     double Rs_in,
     double Ca,
     double LAI,

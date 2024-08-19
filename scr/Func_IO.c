@@ -214,10 +214,11 @@ void import_data(
         (*p_Vars + i)->Pa = atof(strtok(NULL, ","));
         (*p_Vars + i)->Prec = atof(strtok(NULL, ","));
         (*p_Vars + i)->u2 = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Ca = atof(strtok(NULL, ","));
         (*p_Vars + i)->Albedo = atof(strtok(NULL, ","));
         (*p_Vars + i)->Emiss = atof(strtok(NULL, ","));
         (*p_Vars + i)->LAI = atof(strtok(NULL, ","));
-        
+        (*p_Vars + i)->Hc = atof(strtok(NULL, ","));
         i++;
     }
     fclose(fp);
@@ -230,10 +231,10 @@ void import_data(
     printf("%s", row_first);
     for (size_t i = 0; i < 6; i++)
     {
-        printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+        printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
                (*ts_date + i)->y, (*ts_date + i)->m, (*ts_date + i)->d,
                (*p_Vars + i)->Ta, (*p_Vars + i)->Rs_in, (*p_Vars + i)->Rl_in, (*p_Vars + i)->Da, (*p_Vars + i)->Pa,
-               (*p_Vars + i)->Prec, (*p_Vars + i)->u2, (*p_Vars + i)->Albedo, (*p_Vars + i)->Emiss, (*p_Vars + i)->LAI);
+               (*p_Vars + i)->Prec, (*p_Vars + i)->u2, (*p_Vars + i)->Ca, (*p_Vars + i)->Albedo, (*p_Vars + i)->Emiss, (*p_Vars + i)->LAI, (*p_Vars + i)->Hc);
     }
     printf("...\n");
 }
@@ -262,6 +263,7 @@ void import_PMLpara(
     while (fgets(row, MAXCHAR, fp) != NULL && i < CALC_N)
     {
         (*p_Paras + i)->g_sx = atof(strtok(row, ","));
+        (*p_Paras + i)->Q50 = atof(strtok(NULL, ","));
         (*p_Paras + i)->D0 = atof(strtok(NULL, ","));
         (*p_Paras + i)->D50 = atof(strtok(NULL, ","));
         (*p_Paras + i)->k_Q = atof(strtok(NULL, ","));

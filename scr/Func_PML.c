@@ -45,6 +45,7 @@ void PML(
 
     for (size_t i = 0; i < CALC_N; i++)
     {
+        (p_Vars + i)->Pa = (p_Vars + i)->Pa * 0.1;
         Ga = Conductance_Air((p_Vars + i)->Hc, p_GP->Zm, (p_Vars + i)->u2); // unit of Ga: m/s
         Q_h = 0.5 * (p_Vars + i)->Rs_in;  // unit: w/m2
         if (p_GP->PML_V == 1)
@@ -63,6 +64,7 @@ void PML(
             Gc = ConductCanopy_V2(
                 (p_Vars + i)->Ta,
                 (p_Vars + i)->Da,
+                (p_Vars + i)->Pa,
                 (p_Vars + i)->Rs_in,
                 (p_Vars + i)->Ca,
                 (p_Vars + i)->LAI,
