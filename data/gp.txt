@@ -6,8 +6,8 @@ FP_OUT,../../data/fluxsim_AU-Whr.csv
 CALC_N,1461
 
 # the version of PML model: 1 or 2
-PML_V,1
+PML_V,2
 
 # Zm, the measurement height of humidity and wind speed
-Zm,15
+Zm,36
 
