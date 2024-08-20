@@ -148,15 +148,16 @@ void Write_ET2csv(
         printf("Failed to create / open output file: %s\n", FP_OUT);
         exit(1);
     }
-    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s\n",
-            "y", "m", "d", "Ec", "Ei", "Es", "ET", "Rn");
+    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+            "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn");
     for (size_t i = 0; i < CALC_N; i++)
     {
-        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
                 (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                 (p_Outs + i)->Ec,
                 (p_Outs + i)->Ei,
                 (p_Outs + i)->Es,
+                (p_Outs + i)->Es_eq,
                 (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
                 (p_Vars + i)->Rn);
     }

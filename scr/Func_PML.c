@@ -42,12 +42,22 @@ void PML(
         *(Prec + i) = (p_Vars + i)->Prec;
     }
     
-
+    // printf("%7s %7s %7s %7s %7s\n", "Rn", "Ac", "As", "Gc", "Ga");
     for (size_t i = 0; i < CALC_N; i++)
     {
-        (p_Vars + i)->Pa = (p_Vars + i)->Pa * 0.1;
+        (p_Vars + i)->Da = (p_Vars + i)->Da * 0.1; // unit: hPa -> kPa
+        if ((p_Vars + i)->Da < 0.001)
+        {
+            (p_Vars + i)->Da = 0.001;
+        }
+        
         Ga = Conductance_Air((p_Vars + i)->Hc, p_GP->Zm, (p_Vars + i)->u2); // unit of Ga: m/s
-        Q_h = 0.5 * (p_Vars + i)->Rs_in;  // unit: w/m2
+        Q_h = 0.45 * (p_Vars + i)->Rs_in;  // unit: w/m2
+        if (Q_h < 0)
+        {
+            Q_h = 0;
+        }
+        
         if (p_GP->PML_V == 1)
         {
             // unit of Gc: m/s
@@ -56,10 +66,10 @@ void PML(
                 (p_Vars + i)->Da,
                 (p_Vars + i)->LAI,
                 (p_Paras + i)->g_sx,
-                (p_Paras + i)->k_A,
                 (p_Paras + i)->k_Q,
                 (p_Paras + i)->D50,
                 (p_Paras + i)->Q50);
+            
         } else {
             Gc = ConductCanopy_V2(
                 (p_Vars + i)->Ta,
@@ -108,14 +118,21 @@ void PML(
             Prec,
             Ei,
             Es_eq,
-            CALC_N,
+            31,
             i);
         Es = Evaporation_soil(*(Es_eq + i), f);
+        
+        // if (i < 6)
+        // {
+        //     printf("%7.2f %7.2f %7.2f %7.5f %7.5f\n",
+        //            (p_Vars + i)->Rn, Ac, As, Gc, Ga);
+        // }
 
         // ---- out
         (p_Outs + i)->Ec = Ec;
         (p_Outs + i)->Ei = *(Ei + i);
         (p_Outs + i)->Es = Es;
+        (p_Outs + i)->Es_eq = *(Es_eq + i);
     }
     free(Prec);
     free(Ei);
