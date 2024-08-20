@@ -163,15 +163,16 @@ void Write_ET2csv(
 
     fclose(pf_out);
     printf("***** output preview: the first 6 rows\n");
-    printf("%4s %3s %3s %5s %5s %5s %5s %7s\n",
-           "y", "m", "d", "Ec", "Ei", "Es", "ET", "Rn");
+    printf("%4s %3s %3s %5s %5s %5s %5s %5s %7s\n",
+           "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn");
     for (size_t i = 0; i < 6; i++)
     {
-        printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %7.2f\n",
+        printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %5.2f %7.2f\n",
                (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                (p_Outs + i)->Ec,
                (p_Outs + i)->Ei,
                (p_Outs + i)->Es,
+               (p_Outs + i)->Es_eq,
                (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
                (p_Vars + i)->Rn);
     }

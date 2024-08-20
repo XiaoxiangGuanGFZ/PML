@@ -48,7 +48,6 @@ double ConductCanopy_V1(
     double Da,
     double LAI,
     double g_sx,
-    double k_A,
     double k_Q,
     double D50,
     double Q50
@@ -56,7 +55,7 @@ double ConductCanopy_V1(
 {
     double Gc;
     Gc = g_sx / k_Q * log(
-        (Q_h + Q50) / (Q_h * exp(- k_A * LAI) + Q50)
+        (Q_h + Q50) / (Q_h * exp(- k_Q * LAI) + Q50)
     ) * (1 / (1 + Da / D50));
     if (Gc < 1e-6)
     {
@@ -105,8 +104,8 @@ double ConductCanopy_V2(
     P3 = Am * eta * Ca;
     P4 = beta * I0 * eta * Ca;
     Gc = m * P1 / k_Q / (P2 + P4) * (k_Q * LAI + 
-        log((P1 + P3 + P4) / (P2 + P3 * exp(k_Q * LAI) + P4)) * 1 / (1 + Da/D0)
-    );
+        log((P2 + P3 + P4) / (P2 + P3 * exp(k_Q * LAI) + P4)) 
+    ) * 1 / (1 + Da/D0);
 
     // 1.6 = conductance of water / conductance of CO2 (mol m-2 s-1)
     Gc = 1.6 * Gc * 1e-2 / (0.446 * (273 / (273 + Ta)) * (Pa/101.3));

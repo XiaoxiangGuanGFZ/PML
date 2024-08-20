@@ -78,13 +78,13 @@ double SoilMoisture_factor(
         Es_eq_sum = *(Es_eq + calc_ite);
     } else if (calc_ite < N)
     {
-        for (size_t i = 0; i < calc_ite; i++)
+        for (size_t i = 0; i <= calc_ite; i++)
         {
             Pi_sum += *(Prec + i) - *(Ei + i);
             Es_eq_sum += *(Es_eq + i);
         }
     } else {
-        for (size_t i = (calc_ite - N); i < calc_ite; i++)
+        for (size_t i = (calc_ite - N); i <= calc_ite; i++)
         {
             Pi_sum += *(Prec + i) - *(Ei + i);
             Es_eq_sum += *(Es_eq + i);

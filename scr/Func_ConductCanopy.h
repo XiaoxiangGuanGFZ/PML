@@ -6,7 +6,6 @@ double ConductCanopy_V1(
     double Da,
     double LAI,
     double g_sx,
-    double k_A,
     double k_Q,
     double D50,
     double Q50

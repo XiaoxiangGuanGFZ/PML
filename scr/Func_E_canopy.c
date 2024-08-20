@@ -53,7 +53,7 @@ void Evaporation_canopy(
     gamma = SpecificHeat_air * Pa / (0.622 * *lambda); // 干湿表常数 kPa ℃-1
     double s;
     // s 是饱和水汽压和温度关系曲线的斜率 kPa ℃-1
-    s = 4098 * Vapor_pressure(Ta) / pow(273.15 + Ta, 2);
+    s = 4098 * Vapor_pressure(Ta) / pow(237.3 + Ta, 2);
     
     *ee = s / gamma; // unitless
     if (LAI <= 0)
