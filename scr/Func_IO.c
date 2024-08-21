@@ -81,14 +81,19 @@ void import_global(
                 {
                     p_gp->PML_V = atoi(token2);
                 }
+                else if (strncmp(token, "MUTE", 4) == 0)
+                {
+                    strcpy(p_gp->MUTE, token2);
+                }
+                else if (strncmp(token, "HEAT_OBS", 8) == 0)
+                {
+                    strcpy(p_gp->HEAT_OBS, token2);
+                }
                 else if (strncmp(token, "CALC_N", 6) == 0)
                 {
                     p_gp->CALC_N = atoi(token2);
                 }
-                else if (strncmp(token, "Zm", 2) == 0)
-                {
-                    p_gp->Zm = atof(token2);
-                }
+                
                 else
                 {
                     printf("Error in opening global parameter file: unrecognized parameter field: %s\n", token);
@@ -126,13 +131,14 @@ void print_global(
 )
 {
     printf("----------- PML setup -----------\n");
-    printf("%-7s:%s\n%-7s:%s\n%-7s:%s\n%-7s:%d\n%-7s:%d\n%-7s:%.2f\n",
+    printf("%-8s:%s\n%-8s:%s\n%-8s:%s\n%-8s:%s\n%-8s:%s\n%-8s:%d\n%-8s:%d\n",
            "FP_DATA", p_gp->FP_DATA,
            "FP_PARA", p_gp->FP_PARA,
            "FP_OUT", p_gp->FP_OUT,
+           "MUTE", p_gp->MUTE,
+           "HEAT_OBS", p_gp->HEAT_OBS,
            "CALC_N", p_gp->CALC_N,
-           "PML_V", p_gp->PML_V,
-           "Zm", p_gp->Zm);
+           "PML_V", p_gp->PML_V);
 }
 
 void Write_ET2csv(
@@ -148,36 +154,42 @@ void Write_ET2csv(
         printf("Failed to create / open output file: %s\n", FP_OUT);
         exit(1);
     }
-    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
-            "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn");
+    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+            "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn", "FILTER");
     for (size_t i = 0; i < CALC_N; i++)
     {
-        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
+        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d\n",
                 (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                 (p_Outs + i)->Ec,
                 (p_Outs + i)->Ei,
                 (p_Outs + i)->Es,
                 (p_Outs + i)->Es_eq,
-                (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
-                (p_Vars + i)->Rn);
+                (p_Outs + i)->ET,
+                (p_Vars + i)->Rn,
+                (p_Outs + i)->FILTER);
     }
 
     fclose(pf_out);
-    printf("***** output preview: the first 6 rows\n");
-    printf("%4s %3s %3s %5s %5s %5s %5s %5s %7s\n",
-           "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn");
-    for (size_t i = 0; i < 6; i++)
+    if (flag_MUTE == 0)
     {
-        printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %5.2f %7.2f\n",
-               (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
-               (p_Outs + i)->Ec,
-               (p_Outs + i)->Ei,
-               (p_Outs + i)->Es,
-               (p_Outs + i)->Es_eq,
-               (p_Outs + i)->Ec + (p_Outs + i)->Ei + (p_Outs + i)->Es,
-               (p_Vars + i)->Rn);
+        printf("***** output preview: the first 6 rows\n");
+        printf("%4s %3s %3s %5s %5s %5s %5s %5s %7s %6s\n",
+               "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn", "FILTER");
+        for (size_t i = 0; i < 6; i++)
+        {
+            printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %5.2f %7.2f %6d\n",
+                   (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
+                   (p_Outs + i)->Ec,
+                   (p_Outs + i)->Ei,
+                   (p_Outs + i)->Es,
+                   (p_Outs + i)->Es_eq,
+                   (p_Outs + i)->ET,
+                   (p_Vars + i)->Rn,
+                   (p_Outs + i)->FILTER);
+        }
+        printf("...\n");
     }
-    printf("...\n");
+    
 }
 
 
@@ -221,6 +233,10 @@ void import_data(
         (*p_Vars + i)->Emiss = atof(strtok(NULL, ","));
         (*p_Vars + i)->LAI = atof(strtok(NULL, ","));
         (*p_Vars + i)->Hc = atof(strtok(NULL, ","));
+        (*p_Vars + i)->Zm = atof(strtok(NULL, ","));
+        (*p_Vars + i)->LE = atof(strtok(NULL, ","));
+        (*p_Vars + i)->LE_QC = atof(strtok(NULL, ","));
+        (*p_Vars + i)->H = atof(strtok(NULL, ","));
         i++;
     }
     fclose(fp);
@@ -229,16 +245,40 @@ void import_data(
         printf("conflict numbers of lines in data file: %s\n", FP_DATA);
         exit(1);
     }
-    printf("***** data preview: the first 6 rows\n");
-    printf("%s", row_first);
-    for (size_t i = 0; i < 6; i++)
+    if (flag_MUTE == 0)
     {
-        printf("%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
-               (*ts_date + i)->y, (*ts_date + i)->m, (*ts_date + i)->d,
-               (*p_Vars + i)->Ta, (*p_Vars + i)->Rs_in, (*p_Vars + i)->Rl_in, (*p_Vars + i)->Da, (*p_Vars + i)->Pa,
-               (*p_Vars + i)->Prec, (*p_Vars + i)->u2, (*p_Vars + i)->Ca, (*p_Vars + i)->Albedo, (*p_Vars + i)->Emiss, (*p_Vars + i)->LAI, (*p_Vars + i)->Hc);
+        printf("***** data preview: the first 6 rows\n");
+        // printf("%s", row_first);
+        printf("%5s %3s %3s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s ",
+            "y", "m", "d", "Ta", "Rs_in", "Rl_in", "Da", "Pa", "Prec", "u", "Ca", "Albedo", "Emiss", "LAI", "Hc", "Zm"
+        );
+        if (flag_HEATOBS == 1)
+        {
+            printf("%6s %6s %6s\n", "LE", "LE_QC", "H");
+        } else {
+            printf("\n");
+        }
+        
+        for (size_t i = 0; i < 6; i++)
+        {
+            printf("%5d %3d %3d %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f ",
+                   (*ts_date + i)->y, (*ts_date + i)->m, (*ts_date + i)->d,
+                   (*p_Vars + i)->Ta, (*p_Vars + i)->Rs_in, (*p_Vars + i)->Rl_in, (*p_Vars + i)->Da, (*p_Vars + i)->Pa,
+                   (*p_Vars + i)->Prec, (*p_Vars + i)->u2, 
+                   (*p_Vars + i)->Ca, 
+                   (*p_Vars + i)->Albedo, (*p_Vars + i)->Emiss, (*p_Vars + i)->LAI, 
+                   (*p_Vars + i)->Hc, (*p_Vars + i)->Zm);
+            if (flag_HEATOBS == 1)
+            {
+                printf("%6.2f %6.2f %6.2f\n", (*p_Vars + i)->LE, (*p_Vars + i)->LE_QC, (*p_Vars + i)->H);
+            }
+            else
+            {
+                printf("\n");
+            }
+        }
+        printf("...\n");
     }
-    printf("...\n");
 }
 
 
@@ -285,15 +325,21 @@ void import_PMLpara(
         printf("conflict numbers of lines in Para file: %s\n", FP_PARA);
         exit(1);
     }
-    printf("***** para preview: the first 6 rows\n");
-    printf("%s", row_first);
-    for (size_t i = 0; i < 6; i++)
+    if (flag_MUTE == 0)
     {
-        printf("%.4f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
-               (*p_Paras + i)->g_sx, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
-               (*p_Paras + i)->S_sls, (*p_Paras + i)->f_ER0, (*p_Paras + i)->beta, (*p_Paras + i)->eta, (*p_Paras + i)->m,
-               (*p_Paras + i)->Am_25);
+        printf("***** para preview: the first 6 rows\n");
+        // printf("%s", row_first);
+        printf("%6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s\n",
+        "g_sx", "Q50", "D0", "D50", "k_Q", "k_A", "S_sls", "f_ER0", "beta", "eta", "m", "A_m25");
+        for (size_t i = 0; i < 6; i++)
+        {
+            printf("%6.4f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n",
+                   (*p_Paras + i)->g_sx, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
+                   (*p_Paras + i)->S_sls, (*p_Paras + i)->f_ER0, (*p_Paras + i)->beta, (*p_Paras + i)->eta, (*p_Paras + i)->m,
+                   (*p_Paras + i)->Am_25);
+        }
+        printf("...\n");
     }
-    printf("...\n");
+    
 }
 

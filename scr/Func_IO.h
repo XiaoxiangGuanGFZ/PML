@@ -2,6 +2,10 @@
 #define FUNC_IO
 
 
+extern int flag_MUTE;
+extern int flag_HEATOBS;
+
+
 void import_global(
     char fname[], ST_GP *p_gp);
 
