@@ -2,7 +2,7 @@
 
 
 ## How to use
-### Compile
+### compile
 
 the program is coded in C language. Take the following steps to build and implement: navigate to the `scr` folder, create directory `build` and navigate to it. call `cmake` and `make` to build the software. 
 
@@ -131,7 +131,7 @@ y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER
 The last column in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
 
 
-## references
+## References
 
 Leuning, R., Zhang, Y.Q., Rajaud, A., Cleugh, H. and Tu, K.  2008.  A simple surface conductance model to estimate regional evaporation using MODIS leaf area index and the Penman-Monteith equation. Water Resources Research, 44(10). doi: https://doi.org/10.1029/2007WR006562.
 
