@@ -14,6 +14,8 @@ set(SOURCE_FILES
     Func_IO.c
     Func_radiation.c
     Func_PML.c
+    Func_Control.c
+    Func_Metric.c
 )
 
 
