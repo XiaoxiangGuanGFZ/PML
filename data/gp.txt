@@ -8,6 +8,13 @@ CALC_N,1461
 # the version of PML model: 1 or 2
 PML_V,2
 
-# Zm, the measurement height of humidity and wind speed
-Zm,36
+# a flag, if MUTE == TRUE, then run the program silently; if MUTE == FALSE, print some info during running
+MUTE,FALSE
+
+# a flag, if HEAT_OBS == TRUE, means the observed LE and H are available in data file, the program 
+# will conduct the data filtering and energy closure, the NSE is returned. 
+# when HEAT_OBS == TRUE, and MUTE == FALSE, the NSE, R2, RMSE, and Re are printed in the end.
+
+HEAT_OBS,TRUE
+
 

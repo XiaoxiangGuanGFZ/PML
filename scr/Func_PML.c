@@ -51,7 +51,7 @@ void PML(
             (p_Vars + i)->Da = 0.001;
         }
         
-        Ga = Conductance_Air((p_Vars + i)->Hc, p_GP->Zm, (p_Vars + i)->u2); // unit of Ga: m/s
+        Ga = Conductance_Air((p_Vars + i)->Hc, (p_Vars + i)->Zm, (p_Vars + i)->u2); // unit of Ga: m/s
         Q_h = 0.45 * (p_Vars + i)->Rs_in;  // unit: w/m2
         if (Q_h < 0)
         {
@@ -133,6 +133,8 @@ void PML(
         (p_Outs + i)->Ei = *(Ei + i);
         (p_Outs + i)->Es = Es;
         (p_Outs + i)->Es_eq = *(Es_eq + i);
+        (p_Outs + i)->ET = Ec + *(Ei + i) + Es;
+        (p_Outs + i)->FILTER = -1;  // initialize, as -1
     }
     free(Prec);
     free(Ei);

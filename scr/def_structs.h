@@ -25,7 +25,12 @@ typedef struct
     double Ca;          // C02 concentration, 𝜇mol mol-1
     double Emiss;       // 地表发射率, emissitivity
     double Albedo;      // 地表反照率
-    double Rn;          // net radiation, w/m2; estimated from program
+    double Zm;          // suggested measurement height of wind speed and humidity, m
+    double LE;          // observed latent heat, w/m2
+    double LE_QC;       // quality code of LE
+    double H;           // observed sensible heat, w/m2
+    double Rn;          // net radiation, w/m2; estimated (simulated) from program
+    double ET_obs;      // estimated from observed LE, mm
 } ST_VAR_IN;
 
 typedef struct 
@@ -34,6 +39,8 @@ typedef struct
     double Ec;          // canopy transpiration, mm
     double Es;          // soil evaporation, mm
     double Es_eq;       // soil equilibrium evaporation, mm
+    double ET;          // surface (total) evapotranspiration, mm
+    int FILTER;
 } ST_VAR_ET;
 
 
@@ -62,10 +69,10 @@ typedef struct
     char FP_DATA[MAXCHAR];
     char FP_OUT[MAXCHAR];
     char FP_PARA[MAXCHAR];
+    char MUTE[MAXCHAR];
+    char HEAT_OBS[MAXCHAR];
     int CALC_N;
     int PML_V;
-    double Zm;
-
 } ST_GP;
 
 
