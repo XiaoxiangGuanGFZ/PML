@@ -57,6 +57,7 @@ y,m,d,Ta,Rs_in,Rl_in,Da,Pa,Prec,WS,Ca,Albedo,emiss,LAI,Hc,Zm,LE,LE_code,H
 
 Aside from the input variables for PML calculation, the PML parameters are also required to correctly simulate the actual evapotranspiration. See [Leuning et al., (2008)](https://doi.org/10.1029/2007WR006562) and [Gan et al., (2018)](https://doi.org/10.1002/eco.1974) for details. 
 
+An example of parameter file is like below:
 
 ```
 g_sx,Q50,D0,D50,k_Q,k_A,S_sls,f_ER0,beta,eta,m,A_m25
@@ -68,10 +69,12 @@ g_sx,Q50,D0,D50,k_Q,k_A,S_sls,f_ER0,beta,eta,m,A_m25
 ...
 ```
 
+Attention: the number of lines in the parameter file should be the same as that in data file, although the values of these variables can be temporally constant. 
+
 
 ### configure file
 
-A configure file `gp.txt` is required to provide parameters controlling the behavior, an example is:
+A configure file `gp.txt` is required to provide arguments controlling the behavior of this program, an example is:
 
 ```
 # lines starting with hash symbol are comments
@@ -101,6 +104,32 @@ MUTE,FALSE
 
 HEAT_OBS,TRUE
 ```
+
+Then run the program by executing this in the command-line terminal (or shell):
+
+``` console
+./PML.exe path/to/gp.txt
+```
+
+
+### understand the output
+
+In this program, the evaporation from canopy `Ec`, interception `Ei` and soil `Es` are simulated and net radiation `Rn` over canopy and equilibirum soil evaporation `Es_eq` are also returned in the output file. `ET` stands for the actual surface evapotranspiration. 
+
+The output file should look like:
+
+```
+y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER
+2011,1,1,2.04,0.16,0.74,1.43,2.94,209.96,0
+2011,1,2,1.70,0.00,0.37,1.45,2.07,235.99,0
+2011,1,3,1.60,0.00,0.24,1.36,1.84,231.28,0
+2011,1,4,1.84,0.00,0.19,1.47,2.04,240.21,0
+2011,1,5,1.63,0.00,0.14,1.35,1.77,220.91,0
+...
+```
+
+The last column in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
+
 
 ## references
 
