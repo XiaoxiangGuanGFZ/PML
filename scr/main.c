@@ -110,8 +110,7 @@ int main(int argc, char * argv[])
         p_gp->CALC_N);
     /****************** end of the program ***************/
     free(ts_date);
-    free(p_Paras);
-    free(p_gp);
+    free(p_Vars);
     free(p_Paras);
     free(p_Outs);
     if (nse > 0.0)
