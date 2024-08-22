@@ -70,6 +70,7 @@ int main(int argc, char * argv[])
     }
     
     double nse = 0.0;
+    int nse_int;
     if (flag_HEATOBS == 1)
     {
         double *ET_sim;
@@ -113,7 +114,7 @@ int main(int argc, char * argv[])
     free(p_gp);
     free(p_Paras);
     free(p_Outs);
-    
-    return(nse * 10000);
+    nse_int = (int) (nse * 10000);
+    return nse_int;
 }
 
