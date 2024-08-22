@@ -131,7 +131,7 @@ y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER
 
 The last column in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
 
-When the observaed flux (LE and H) are available, namely `HEAT_OBS == TRUE`, the program also returns the estimated Nash–Sutcliffe efficiency coefficient to the calling evenronment. As the C program can also return integer value, so literally the returned value is `10000 * NSE`.
+When the observaed flux (LE and H) are available, namely `HEAT_OBS == TRUE`, the program also returns the estimated Nash–Sutcliffe efficiency coefficient to the calling evenronment. As the C program can also return integer value, so literally the returned value is `10000 * NSE` if `NSE > 0`, else the program just returns `0`.
 
 ## References
 
