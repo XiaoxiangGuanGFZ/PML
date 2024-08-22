@@ -6,13 +6,14 @@
 
 the program is coded in C language. Take the following steps to build and implement: navigate to the `scr` folder, create directory `build` and navigate to it. call `cmake` and `make` to build the software. 
 
+For example, to compile the program in the Windows OS with MinGW: 
 
 ```console
 $ cd ./PML/scr/
 $ mkdir build
 $ cd build
-$ cmake ..
-$ make
+$ cmake -G "MinGW Makefiles" ..
+$ mingw32-make
 ```
 
 then an executable is generated named `PML.exe` (in Windows OS).
@@ -130,6 +131,7 @@ y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER
 
 The last column in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
 
+When the observaed flux (LE and H) are available, namely `HEAT_OBS == TRUE`, the program also returns the estimated Nash–Sutcliffe efficiency coefficient to the calling evenronment. As the C program can also return integer value, so literally the returned value is `10000 * NSE`.
 
 ## References
 
