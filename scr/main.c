@@ -11,7 +11,7 @@
 int flag_MUTE;
 int flag_HEATOBS;
 
-double main(int argc, char * argv[])
+int main(int argc, char * argv[])
 {
     ST_GP Para_df;     // define the global-parameter structure
     ST_GP *p_gp;      // give a pointer to global_parameter structure
@@ -114,6 +114,6 @@ double main(int argc, char * argv[])
     free(p_Paras);
     free(p_Outs);
     
-    return nse;
+    return(nse * 10000);
 }
 
