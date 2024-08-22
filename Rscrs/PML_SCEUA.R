@@ -18,7 +18,7 @@ library(rtop)
 ws <- "D:/Xie/PML/"
 fp_PML <<- paste0(ws, "scr/build/PML.exe ")  # the PML c program
 fp_gp <<- paste0(ws, "data/gp_SCEUA.txt")   # the PML.exe program configure file
-fp_data = paste0(ws, "data/data_AU-Whr.csv")  # the weather variable data file
+fp_data <- paste0(ws, "data/data_AU-Whr.csv")  # the weather variable data file
 fp_out <- paste0(ws, "data/fluxsim_AU-Whr.csv") # the output file 
 fp_para <<- paste0(ws, "data/PMLpara_AU-Whr.csv") # the PML parameter file
 CALC_N <<- 1461     # the number of lines (observations) in data file, excluding the header line
@@ -40,8 +40,19 @@ write.table(
 #   fp_data, header = T, sep = ","
 # )
 
-df_para <<- read.table(
-  fp_para, header = T, sep = ","
+df_para <<- data.frame(
+  g_sx = rep(0.0038, CALC_N),
+  Q50 = rep(30, CALC_N),
+  D0 = rep(0.536, CALC_N),
+  D50 = rep(0.7, CALC_N),
+  k_Q = rep(0.832, CALC_N),
+  k_A = rep(0.899, CALC_N),
+  S_sls = rep(0.098, CALC_N),
+  f_ER0 = rep(0.085, CALC_N),
+  beta = rep(0.048, CALC_N),
+  eta = rep(0.024, CALC_N),
+  m = rep(10.602, CALC_N),
+  A_m25 = rep(13.875, CALC_N)
 )
 
 # fp_obs <- paste0(ws,"data/fluxobs_AU-Whr.csv")  # 
