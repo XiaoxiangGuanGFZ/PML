@@ -115,23 +115,24 @@ Then run the program by executing this in the command-line terminal (or shell):
 
 ### understand the output
 
-In this program, the evaporation from canopy `Ec`, interception `Ei` and soil `Es` are simulated and net radiation `Rn` over canopy and equilibirum soil evaporation `Es_eq` are also returned in the output file. `ET` stands for the actual surface evapotranspiration. 
+In this program, the evaporation from canopy `Ec`, interception `Ei` and soil `Es` are simulated and net radiation `Rn` over canopy and equilibirum soil evaporation `Es_eq` are also returned in the output file. `ET` stands for the actual surface evapotranspiration. If `HEAT_OBS == TRUE`, the observed ET `ET_obs` is aslo calculated based on LE and H, and printed to the output file.
 
 The output file should look like:
 
 ```
-y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER
-2011,1,1,2.04,0.16,0.74,1.43,2.94,209.96,0
-2011,1,2,1.70,0.00,0.37,1.45,2.07,235.99,0
-2011,1,3,1.60,0.00,0.24,1.36,1.84,231.28,0
-2011,1,4,1.84,0.00,0.19,1.47,2.04,240.21,0
-2011,1,5,1.63,0.00,0.14,1.35,1.77,220.91,0
+y,m,d,Ec,Ei,Es,Es_eq,ET,Rn,FILTER,ET_obs
+2011,1,1,2.30,0.23,0.67,1.46,3.20,209.96,0,2.30
+2011,1,2,1.98,0.00,0.34,1.47,2.32,235.99,0,2.67
+2011,1,3,1.88,0.00,0.22,1.39,2.10,231.28,0,2.60
+2011,1,4,2.14,0.00,0.17,1.50,2.31,240.21,0,2.61
+2011,1,5,1.89,0.00,0.13,1.38,2.02,220.91,0,2.50
+2011,1,6,2.30,0.00,0.12,1.59,2.42,240.87,0,2.72
 ...
 ```
 
-The last column in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
+The column `FILTER` in the output file indicates whether the value passes the data quality and energy closure control (yes: `1`; no: `0`). If the observed LE or H is not available, the `-1` is returned. 
 
-When the observaed flux (LE and H) are available, namely `HEAT_OBS == TRUE`, the program also returns the estimated Nash–Sutcliffe efficiency coefficient to the calling evenronment. As the C program can also return integer value, so literally the returned value is `10000 * NSE` if `NSE > 0`, else the program just returns `0`.
+When the observaed flux (LE and H) are available, namely `HEAT_OBS == TRUE`, the program also prints the estimated Nash–Sutcliffe efficiency coefficient (NSE) even if `MUTE == TRUE`. 
 
 ## References
 
