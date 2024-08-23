@@ -329,12 +329,12 @@ void import_PMLpara(
     {
         printf("***** para preview: the first 6 rows\n");
         // printf("%s", row_first);
-        printf("%6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s\n",
+        printf("%6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s %6s\n",
         "g_sx", "Q50", "D0", "D50", "k_Q", "k_A", "S_sls", "f_ER0", "beta", "eta", "m", "A_m25");
         for (size_t i = 0; i < 6; i++)
         {
-            printf("%6.4f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n",
-                   (*p_Paras + i)->g_sx, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
+            printf("%6.4f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\n",
+                   (*p_Paras + i)->g_sx, (*p_Paras + i)->Q50, (*p_Paras + i)->D0, (*p_Paras + i)->D50, (*p_Paras + i)->k_Q, (*p_Paras + i)->k_A,
                    (*p_Paras + i)->S_sls, (*p_Paras + i)->f_ER0, (*p_Paras + i)->beta, (*p_Paras + i)->eta, (*p_Paras + i)->m,
                    (*p_Paras + i)->Am_25);
         }
