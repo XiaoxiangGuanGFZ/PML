@@ -154,11 +154,19 @@ void Write_ET2csv(
         printf("Failed to create / open output file: %s\n", FP_OUT);
         exit(1);
     }
-    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+
+    fprintf(pf_out, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
             "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn", "FILTER");
+    if (flag_HEATOBS == 1)
+    {
+        fprintf(pf_out, ",%s\n", "ET_obs");
+    } else {
+        fprintf(pf_out, "\n");
+    }
+    
     for (size_t i = 0; i < CALC_N; i++)
     {
-        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d\n",
+        fprintf(pf_out, "%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%d",
                 (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                 (p_Outs + i)->Ec,
                 (p_Outs + i)->Ei,
@@ -167,17 +175,31 @@ void Write_ET2csv(
                 (p_Outs + i)->ET,
                 (p_Vars + i)->Rn,
                 (p_Outs + i)->FILTER);
+        if (flag_HEATOBS == 1)
+        {
+            fprintf(pf_out, ",%.2f\n", (p_Vars + i)->ET_obs);
+        } else {
+            fprintf(pf_out, "\n");
+        }
     }
 
     fclose(pf_out);
     if (flag_MUTE == 0)
     {
         printf("***** output preview: the first 6 rows\n");
-        printf("%4s %3s %3s %5s %5s %5s %5s %5s %7s %6s\n",
+        printf("%4s %3s %3s %5s %5s %5s %5s %5s %7s %6s",
                "y", "m", "d", "Ec", "Ei", "Es", "Es_eq", "ET", "Rn", "FILTER");
+        if (flag_HEATOBS == 1)
+        {
+            printf(" %6s\n", "ET_obs");
+        }
+        else
+        {
+            printf("\n");
+        }
         for (size_t i = 0; i < 6; i++)
         {
-            printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %5.2f %7.2f %6d\n",
+            printf("%4d %3d %3d %5.2f %5.2f %5.2f %5.2f %5.2f %7.2f %6d",
                    (ts_date + i)->y, (ts_date + i)->m, (ts_date + i)->d,
                    (p_Outs + i)->Ec,
                    (p_Outs + i)->Ei,
@@ -186,6 +208,14 @@ void Write_ET2csv(
                    (p_Outs + i)->ET,
                    (p_Vars + i)->Rn,
                    (p_Outs + i)->FILTER);
+            if (flag_HEATOBS == 1)
+            {
+                printf(" %5.2f\n", (p_Vars + i)->ET_obs);
+            }
+            else
+            {
+                printf("\n");
+            }
         }
         printf("...\n");
     }
