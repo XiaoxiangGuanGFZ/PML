@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
     }
     
     double nse = 0.0;
-    int nse_int = 0;
+    // int nse_int = 0;
     if (flag_HEATOBS == 1)
     {
         double *ET_sim;
@@ -99,7 +99,6 @@ int main(int argc, char * argv[])
                 "Re", Re * 100
             );
         }
-        
     }
 
     Write_ET2csv(
@@ -113,11 +112,15 @@ int main(int argc, char * argv[])
     free(p_Vars);
     free(p_Paras);
     free(p_Outs);
-    if (nse > 0.0)
-    {
-        nse_int = (int) (nse * 10000);
-    }
+    // if (nse > 0.0)
+    // {
+    //     nse_int = (int) (nse * 10000);
+    // }
     // printf("returned nse: %d\n", nse_int);
-    return nse_int;
+    if (flag_HEATOBS == 1)
+    {
+        printf("%f\n", nse);
+    }
+    return 0;
 }
 

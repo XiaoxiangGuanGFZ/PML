@@ -9,7 +9,7 @@ CALC_N,1461
 PML_V,2
 
 # a flag, if MUTE == TRUE, then run the program silently; if MUTE == FALSE, print some info during running
-MUTE,FALSE
+MUTE,TRUE
 
 # a flag, if HEAT_OBS == TRUE, means the observed LE and H are available in data file, the program 
 # will conduct the data filtering and energy closure, the NSE is returned. 
